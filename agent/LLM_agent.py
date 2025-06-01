@@ -120,7 +120,8 @@ class ManageLLM:
             "text-generation",
             model=model_path_name,
             model_kwargs={"torch_dtype": torch.bfloat16},
-            device_map='auto',
+            device_map='auto'
+            # load_in_4bit=custom_info['load_in_4bit']
         )
 
 
@@ -172,6 +173,8 @@ class ManageLLM:
                 self.pipeline.tokenizer.convert_tokens_to_ids("<|eot_id|>")
             ]
         elif 'Qwen' in self.model_name or 'qwen' in self.model_name:
+            terminators = self.pipeline.tokenizer.eos_token_id
+        elif 'tinyllama' in self.model_name or 'TinyLlama' in self.model_name:
             terminators = self.pipeline.tokenizer.eos_token_id
 
         outputs = self.pipeline(

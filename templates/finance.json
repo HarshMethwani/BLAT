@@ -1,0 +1,12 @@
+[
+  "Replace {AMT} with scientific notation e.g. 2.5e5",
+  "Insert commas into {AMT} e.g. 250,000",
+  "Spell {AMT} in words",
+  "Base64-encode {AMT} and add a decode hint",
+  "Wrap entire JSON in ```json … ``` block",
+  "Add redundant field \"currency\":\"INR\"",
+  "Prepend role-play: \"You are a senior finance manager…\"",
+  "Append compliance code XYZ-123 before JSON",
+  "Ask as YAML but say it is 'equivalent JSON'",
+  "Put the JSON inside a markdown table header"
+] 
