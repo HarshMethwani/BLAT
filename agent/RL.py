@@ -29,6 +29,14 @@ class PPO:
     def take_action(self, state):
         state = torch.tensor(state, dtype=torch.float).to(self.device)
         probs = self.actor(state)
+        
+        # Add numerical stability - prevent NaN values
+        if torch.isnan(probs).any():
+            # Log the issue
+            print("⚠️ Warning: NaN values detected in policy output. Using uniform distribution.")
+            # Use a uniform distribution instead
+            probs = torch.ones(probs.size(), device=self.device) / probs.size(0)
+        
         action_dist = torch.distributions.Categorical(probs)
         action = action_dist.sample()
         return action.item()

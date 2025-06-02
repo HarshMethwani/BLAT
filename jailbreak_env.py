@@ -224,6 +224,7 @@ class JbEnv:
         
         # Get embedding for next state
         repr_next_state = self.reprLLM(self.last_prompt)[0]
+        repr_next_state = self.normalize_state(repr_next_state)
         
         return repr_next_state, reward, done, info
 
@@ -266,6 +267,7 @@ class JbEnv:
             done = False
             self.last_prompt = next_prompt
             repr_next_state = self.reprLLM(self.last_prompt)[0]
+        repr_next_state = self.normalize_state(repr_next_state)
         return repr_next_state, reward, done, info
     
     def _finance_reset(self):
@@ -651,3 +653,17 @@ class JbEnv:
 
     def close(self):
         pass
+
+    def normalize_state(self, state):
+        """Ensure state is properly normalized to prevent numerical instability"""
+        # Check for NaN values
+        if torch.isnan(state).any():
+            print("⚠️ Warning: NaN values detected in state. Replacing with zeros.")
+            state = torch.zeros_like(state)
+        
+        # Normalize if vector magnitude is too large or small
+        norm = torch.norm(state)
+        if norm > 1e3 or norm < 1e-3:
+            state = state / (norm + 1e-8)
+        
+        return state
