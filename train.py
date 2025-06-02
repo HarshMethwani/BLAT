@@ -140,17 +140,17 @@ if args.env == "finance_otp":
 else:
     env = JbEnv(helpLLM, reprLLM, victimLLM, judgeLLM, harmful_prompt, template, ASR, **env_kwargs)
 
-# env.create_fast_embedding()
+env.create_fast_embedding()
 # neural network
 state_dim = env.observation_space
 hidden_dim = env.observation_space // 4
 action_dim = env.action_space
 
 # * ------ RL agent PPO ------
-actor_lr = 1e-4
-critic_lr = 2e-4
-lmbda = 0.97  # Discount factor for balanced advantage
-gamma = 0.9  # The temporal difference learning rate, also used as one of the factors for discounting advantage. Here we are more concerned with short-term rewards.
+actor_lr = 5e-5
+critic_lr = 1e-4
+lmbda = 0.97
+gamma = 0.9
 inner_epochs = 10
 eps = 0.2
 

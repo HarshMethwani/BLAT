@@ -667,3 +667,28 @@ class JbEnv:
             state = state / (norm + 1e-8)
         
         return state
+
+    def create_fast_embedding(self):
+        """Create a faster embedding function for the representation model"""
+        def embedding_function(text):
+            # Simple L2 normalization of embeddings
+            if isinstance(text, list):
+                results = []
+                for t in text:
+                    emb = self.reprLLM(t)[0]
+                    # Normalize the embedding
+                    norm = torch.norm(emb)
+                    if norm > 0:
+                        emb = emb / norm
+                    results.append(emb)
+                return results
+            else:
+                emb = self.reprLLM(text)[0]
+                # Normalize the embedding
+                norm = torch.norm(emb)
+                if norm > 0:
+                    emb = emb / norm
+                return [emb]
+        
+        # Replace the original embedding function
+        self.reprLLM = embedding_function
